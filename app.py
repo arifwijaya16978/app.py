@@ -32,10 +32,16 @@ with col_title:
 st.write(f"Last Updated: {datetime.datetime.now().strftime('%d %B %Y')}")
 
 # =========================================
-# LOAD DATA
+# UPLOAD CSV
 # =========================================
 
-df = pd.read_csv("kpi_data.csv")
+uploaded_file = st.sidebar.file_uploader("Upload KPI CSV", type=["csv"])
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+else:
+    st.warning("Please upload a CSV file to continue.")
+    st.stop()
 
 # Normalize column names
 df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
@@ -222,4 +228,5 @@ colA, colB, colC = st.columns(3)
 
 colA.metric("Average", f"{trend_df[selected_kpi].mean():.2f}")
 colB.metric("Max", f"{trend_df[selected_kpi].max():.2f}")
+
 colC.metric("Min", f"{trend_df[selected_kpi].min():.2f}")
